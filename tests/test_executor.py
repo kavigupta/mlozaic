@@ -3,8 +3,8 @@ import unittest
 from PIL import Image
 import numpy as np
 
-from drawing.parser import parse
-from drawing.renderer import render
+from mlozaic.parser import parse
+from mlozaic.renderer import render
 
 render_or_check = "check"
 
