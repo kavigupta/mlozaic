@@ -14,13 +14,12 @@ setuptools.setup(
     url="https://github.com/kavigupta/mlozaic",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.5',
+    python_requires='>=3.6',
     install_requires=[
         "numpy==1.19.4",
         "attrs==20.3.0"
