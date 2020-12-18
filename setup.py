@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.1.0",
     author="Kavi Gupta",
     author_email="mlozaic@kavigupta.org",
-    description="A simple programming language.",
+    description="Shape and image drawing programming language to be used as an ML domain.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/kavigupta/mlozaic",
