@@ -20,9 +20,9 @@ def render(items, size=(100, 100), stretch=10):
         h / 2 - np.arange(h * stretch) / stretch,
     )
     coords = np.array([x, y])
-    image = np.zeros((w * stretch, h * stretch, 3)) + 1
+    image = np.zeros((w * stretch, h * stretch, 3), dtype=np.uint8) + 255
     for item in items:
         trans_coords = invert_transform(item.transform, coords)
         mask = item.type(*trans_coords)
-        image[mask] = np.array([*item.color]) / 255
+        image[mask] = np.clip(np.array([*item.color]), 0, 255).astype(np.uint8)
     return image
