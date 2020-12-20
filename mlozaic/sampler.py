@@ -31,7 +31,7 @@ def probabilities_for_weights(items, weights):
     return probs
 
 
-class PCFGSamplerConfig(Sampler):
+class PCFGSampler(Sampler):
     def __init__(self, rng, grammar=grammar, weights={}):
         super().__init__(rng)
         self.weights = weights
