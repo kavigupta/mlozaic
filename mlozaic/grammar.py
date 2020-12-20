@@ -1,6 +1,7 @@
 from .ast.expression import (
     Constant,
     Variable,
+    Color,
     NumericOperation,
     Comparison,
     BooleanBinaryOp,
@@ -10,7 +11,6 @@ from .ast.expression import (
 from .ast.drawing import (
     Primitive,
     Transform,
-    Color,
     Combine,
     Repeat,
     If,
@@ -25,9 +25,8 @@ grammar = {
         [BooleanUnaryOp, "C"],
     ],
     "D": [
-        [Primitive, "N", "N", "N", "N"],
+        [Primitive, Color, "N", "N", "N", "N"],
         [Transform, "N", "D"],
-        [Color, "N", "N", "N", "D"],
         [Combine, "D", "D"],
         [Repeat, Variable, "N", "N", "D"],
         [If, "C", "D"],

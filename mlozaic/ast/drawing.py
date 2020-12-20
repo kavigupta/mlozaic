@@ -12,6 +12,7 @@ from .expression import Variable
 @attr.s
 class Primitive(Form):
     tag = attr.ib()
+    color = attr.ib()
     cx = attr.ib()
     cy = attr.ib()
     rx = attr.ib()
@@ -26,7 +27,7 @@ class Primitive(Form):
         return cls(tag, *operands)
 
     def evaluate(self, env):
-        return [Item(LEAVES[self.tag], self._transform(env))]
+        return [Item(LEAVES[self.tag], self._transform(env), self.color.evaluate(env))]
 
     def _transform(self, env):
         return translate(self.cx.evaluate(env), self.cy.evaluate(env)) @ scale(
@@ -35,7 +36,14 @@ class Primitive(Form):
 
     @property
     def tree(self):
-        return [self.tag, self.cx.tree, self.cy.tree, self.rx.tree, self.ry.tree]
+        return [
+            self.tag,
+            self.color.tree,
+            self.cx.tree,
+            self.cy.tree,
+            self.rx.tree,
+            self.ry.tree,
+        ]
 
 
 @attr.s
@@ -79,16 +87,6 @@ class SimpleForm(Form):
     def tree(self):
         [tag] = self.tags()
         return [tag] + [op.tree for op in self.operands]
-
-
-class Color(SimpleForm):
-    @classmethod
-    def tags(cls):
-        return ["color"]
-
-    def evaluate(self, env):
-        r, g, b, children = [op.evaluate(env) for op in self.operands]
-        return [Item(child.type, child.transform, [r, g, b]) for child in children]
 
 
 class Combine(SimpleForm):

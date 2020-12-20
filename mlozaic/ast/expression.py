@@ -6,6 +6,7 @@ import attr
 from .node import Atom, Form, Error
 from ..constants import NUM_VARS, CONSTANTS
 from ..operations import NUM_OPS, BOOL_BINARY_OPS, BOOL_UNARY_OP, COMPARISONS
+from ..colors import COLORS
 
 
 @attr.s
@@ -29,6 +30,28 @@ class Constant(Atom):
     @property
     def tree(self):
         return str(self.value)
+
+
+@attr.s
+class Color(Atom):
+    tag = attr.ib()
+
+    @classmethod
+    def tags(cls):
+        return list(COLORS)
+
+    @classmethod
+    def parse(cls, s):
+        if s in COLORS:
+            return cls(s)
+        return Error()
+
+    def evaluate(self, env):
+        return COLORS[self.tag]
+
+    @property
+    def tree(self):
+        return self.tag
 
 
 @attr.s

@@ -37,5 +37,5 @@ def render(items, size=(100, 100), stretch=10):
         except np.linalg.LinAlgError:
             continue
         mask = item.type(*trans_coords)
-        image[mask] = np.clip(np.array([*item.color]), 0, 255).astype(np.uint8)
+        image[mask] = item.color
     return image
