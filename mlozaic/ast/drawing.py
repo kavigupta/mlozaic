@@ -26,6 +26,10 @@ class Primitive(Atom):
     def evaluate(self, env):
         return [Item(LEAVES[self.tag])]
 
+    @property
+    def tree(self):
+        return self.tag
+
 
 @attr.s
 class Transform(Form):
@@ -51,6 +55,10 @@ class Transform(Form):
             for child in children
         ]
 
+    @property
+    def tree(self):
+        return [self.transform] + [op.tree for op in self.operands]
+
 
 @attr.s
 class SimpleForm(Form):
@@ -59,6 +67,11 @@ class SimpleForm(Form):
     @classmethod
     def parse(cls, tag, operands):
         return cls(operands)
+
+    @property
+    def tree(self):
+        [tag] = self.tags()
+        return [tag] + [op.tree for op in self.operands]
 
 
 class Color(SimpleForm):

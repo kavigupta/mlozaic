@@ -17,6 +17,11 @@ class Node(ABC):
     def custom_sample(cls, sampler, variables):
         pass
 
+    @property
+    @abstractmethod
+    def tree(self):
+        pass
+
 
 class Atom(Node):
     @classmethod
@@ -40,3 +45,7 @@ class Error(Node):
 
     def evaluate(self, env):
         raise SyntaxError("error in parsing")
+
+    @property
+    def tree(self):
+        return "#err"

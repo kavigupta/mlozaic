@@ -26,6 +26,10 @@ class Constant(Atom):
     def evaluate(self, env):
         return self.value
 
+    @property
+    def tree(self):
+        return str(self.value)
+
 
 @attr.s
 class Variable(Atom):
@@ -51,6 +55,10 @@ class Variable(Atom):
     def evaluate(self, env):
         return env[self.name]
 
+    @property
+    def tree(self):
+        return self.name
+
 
 @attr.s
 class Operation(Form):
@@ -74,6 +82,10 @@ class Operation(Form):
         return self.operations()[self.operation](
             *[op.evaluate(env) for op in self.operands]
         )
+
+    @property
+    def tree(self):
+        return [self.operation] + [op.tree for op in self.operands]
 
 
 class NumericOperation(Operation):
