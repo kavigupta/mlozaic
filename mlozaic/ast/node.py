@@ -22,6 +22,12 @@ class Node(ABC):
     def tree(self):
         pass
 
+    @property
+    def code(self):
+        from ..parser import flatten
+
+        return flatten(self.tree)
+
 
 class Atom(Node):
     @classmethod

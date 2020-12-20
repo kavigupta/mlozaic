@@ -19,6 +19,12 @@ def lex(x):
     return [tok for tok in tokens if tok]
 
 
+def flatten(x):
+    if isinstance(x, str):
+        return [x]
+    return ["("] + [u for t in x for u in flatten(t)] + [")"]
+
+
 def _parse(tokens):
     if tokens[-1] in MATCHED_PARENS:
         last = MATCHED_PARENS[tokens.pop()]
