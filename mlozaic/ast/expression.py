@@ -4,7 +4,7 @@ from itertools import count
 import attr
 
 from .node import Atom, Form, Error
-from ..constants import NUM_VARS, CONSTANTS_RANGE
+from ..constants import NUM_VARS, CONSTANTS
 from ..operations import NUM_OPS, BOOL_BINARY_OPS, BOOL_UNARY_OP, COMPARISONS
 
 
@@ -14,7 +14,7 @@ class Constant(Atom):
 
     @classmethod
     def tags(cls):
-        return [str(i) for i in range(-CONSTANTS_RANGE, CONSTANTS_RANGE + 1)]
+        return [str(i) for i in CONSTANTS]
 
     @classmethod
     def parse(cls, s):
