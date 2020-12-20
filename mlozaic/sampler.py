@@ -4,7 +4,7 @@ import attr
 
 import numpy as np
 
-from .ast.expression import Variable
+from .ast.expression import Variable, Constant
 from .grammar import grammar
 
 
@@ -15,6 +15,12 @@ class Sampler(ABC):
     @abstractmethod
     def sample(self, variables, production="D"):
         pass
+
+    def sample_inputs(self, variables):
+        inputs = {}
+        for variable in variables:
+            inputs[variable] = self.sample({}, production=Constant).value
+        return inputs
 
     def sample_from_list(self, items):
         return items[rng.choice(len(items))]
