@@ -57,7 +57,7 @@ class TestParsing(unittest.TestCase):
             "(repeat $0 -30 30 (translateY (/ (* $0 $0) 30) (translateX $0 circle)))",
         )
 
-    def test_parabola(self):
+    def test_star_field(self):
         self.render_or_check(
             "star-field",
             """
