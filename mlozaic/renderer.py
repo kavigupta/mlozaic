@@ -31,7 +31,10 @@ def render(items, size=(100, 100), stretch=10):
     coords = np.array([x, y])
     image = np.zeros((w * stretch, h * stretch, 3), dtype=np.uint8) + 255
     for item in items:
-        trans_coords = invert_transform(item.transform, coords)
+        try:
+            trans_coords = invert_transform(item.transform, coords)
+        except np.linalg.LinAlgError:
+            continue
         mask = item.type(*trans_coords)
         image[mask] = np.clip(np.array([*item.color]), 0, 255).astype(np.uint8)
     return image
