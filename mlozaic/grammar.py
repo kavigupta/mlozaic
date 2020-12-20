@@ -25,7 +25,7 @@ grammar = {
         [BooleanUnaryOp, "C"],
     ],
     "D": [
-        Primitive,
+        [Primitive, "N", "N", "N", "N"],
         [Transform, "N", "D"],
         [Color, "N", "N", "N", "D"],
         [Combine, "D", "D"],

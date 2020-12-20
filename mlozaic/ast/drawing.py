@@ -2,33 +2,40 @@ from abc import ABC, abstractmethod
 
 import attr
 
-from ..transforms import TRANSFORMS
+from ..transforms import TRANSFORMS, translate, scale
 from ..leaves import LEAVES
 from ..value import Item
-from .node import Atom, Form, Error
+from .node import Form, Error
 from .expression import Variable
 
 
 @attr.s
-class Primitive(Atom):
+class Primitive(Form):
     tag = attr.ib()
+    cx = attr.ib()
+    cy = attr.ib()
+    rx = attr.ib()
+    ry = attr.ib()
 
     @classmethod
     def tags(cls):
         return list(LEAVES)
 
     @classmethod
-    def parse(cls, s):
-        if isinstance(s, str) and s in LEAVES:
-            return cls(s)
-        return Error()
+    def parse(cls, tag, operands):
+        return cls(tag, *operands)
 
     def evaluate(self, env):
-        return [Item(LEAVES[self.tag])]
+        return [Item(LEAVES[self.tag], self._transform(env))]
+
+    def _transform(self, env):
+        return translate(self.cx.evaluate(env), self.cy.evaluate(env)) @ scale(
+            self.rx.evaluate(env), self.ry.evaluate(env)
+        )
 
     @property
     def tree(self):
-        return self.tag
+        return [self.tag, self.cx.tree, self.cy.tree, self.rx.tree, self.ry.tree]
 
 
 @attr.s
