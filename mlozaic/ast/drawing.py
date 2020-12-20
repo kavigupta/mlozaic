@@ -103,7 +103,7 @@ class Repeat(SimpleForm):
             variables, production="N"
         )
         body = sampler.sample(variables | {variable}, production="D")
-        return cls.parse("repeat", (variable, start, end, body))
+        return cls.parse("repeat", (Variable.parse(variable), start, end, body))
 
 
 class If(SimpleForm):

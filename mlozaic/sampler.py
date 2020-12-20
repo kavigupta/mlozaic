@@ -4,6 +4,7 @@ import attr
 
 import numpy as np
 
+from .ast.expression import Variable
 from .grammar import grammar
 
 
@@ -43,6 +44,8 @@ class PCFGSamplerConfig(Sampler):
 
     def sample(self, variables, production="D"):
         variables = set(variables)
+        if production == Variable:
+            return Variable.parse(self.sample_from_list(sorted(variables)))
         if isinstance(production, type):
             tag = self.sample_from_list(production.tags())
             return production.parse(tag)
