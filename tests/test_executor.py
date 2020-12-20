@@ -13,8 +13,6 @@ class TestParsing(unittest.TestCase):
     def render_or_check(self, name, program, env={}):
         image = render(parse(program).evaluate(env), stretch=1)
 
-        image = (image * 255).astype(np.uint8)
-
         path = f"examples/{name}.png"
 
         if render_or_check == "render":
