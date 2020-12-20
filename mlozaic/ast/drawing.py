@@ -101,7 +101,7 @@ class Repeat(SimpleForm):
 
     def evaluate(self, env):
         var, start, end, body = self.operands
-        start, end = start.evaluate(env), end.evaluate(end)
+        start, end = start.evaluate(env), end.evaluate(env)
         shape = []
         for i in range(int(start), int(end)):
             child_env = env.copy()
