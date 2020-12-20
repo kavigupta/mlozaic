@@ -12,6 +12,15 @@ def invert_transform(t, coordinates):
     rescaled = rescaled.reshape(*coordinates.shape)
     return rescaled
 
+def forward_transform(t, coordinates):
+    assert t.shape == (3, 3)
+    A = t[:2, :2]
+    b = t[:2, 2]
+
+    scaled = (A @ coordinates.reshape(2, -1)).reshape(*coordinates.shape)
+    shifted = coordinates + b[:,None,None]
+    return shifted
+
 
 def render(items, size=(100, 100), stretch=10):
     w, h = size
