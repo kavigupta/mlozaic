@@ -20,5 +20,10 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",
-    install_requires=["numpy==1.19.4", "attrs==20.3.0"],
+    install_requires=["numpy==1.19.4", "attrs==20.3.0", "fire==0.3.1", "tqdm==4.54.1"],
+    entry_points={
+        "console_scripts": [
+            "standard_dataset=mlozaic.dataset.standard_dataset:main",
+        ],
+    },
 )
