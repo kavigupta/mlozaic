@@ -5,7 +5,9 @@ import attr
 import numpy as np
 
 from .ast.expression import Variable, Constant
+from .ast.drawing import Primitive
 from .grammar import grammar
+from .renderer import forward_transform
 
 
 class Sampler(ABC):
@@ -68,3 +70,62 @@ class PCFGSampler(Sampler):
         if custom_sample is not None:
             return custom_sample
         return self.sample(variables, rule)
+
+
+def item_within_bounding_box(item, size):
+    if np.linalg.det(item.transform[:2, :2]) < 1e-7:
+        return False  # degenerate
+    points_of_interest = (
+        np.array([[1, 1], [1, -1], [-1, 1], [-1, -1]])
+        .astype(np.float)
+        .T.reshape(2, -1, 1)
+    )
+    new_pois = forward_transform(item.transform, points_of_interest)
+    return (new_pois <= size).all()
+
+
+class InputSampler:
+    def __init__(self, underlying, size):
+        self.underlying = underlying
+        self.size = size
+
+    def sample(self, variables):
+        while True:
+            program = self.underlying.sample(variables)
+            io = self.sample_inputs(program, variables)
+            if io is not None:
+                return (program, *io)
+
+    def sample_inputs(self, program, variables):
+        tokens = set(program.code)
+        if isinstance(program, Primitive):
+            return
+        for var in variables:
+            if var not in tokens:
+                return
+        if "white" in tokens:
+            return
+        if not ("combine" in tokens or "repeat" in tokens):
+            return
+        print("considering: ", " ".join(program.code))
+
+        inputs = [self.underlying.sample_inputs(variables) for _ in range(25)]
+        try:
+            outputs = [program.evaluate(inp) for inp in inputs]
+        except ZeroDivisionError:
+            return
+
+        bad = 0
+        for o in outputs:
+            within, not_within = 0, 0
+            for item in o:
+                if item_within_bounding_box(item, self.size / 2):
+                    within += 1
+                else:
+                    not_within += 1
+            if within <= 1 or not_within / len(o) > 0.5:
+                bad += 1
+        if bad > 0:
+            return
+
+        return inputs, outputs
