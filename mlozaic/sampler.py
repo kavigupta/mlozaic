@@ -22,9 +22,6 @@ class Sampler(ABC):
             inputs[variable] = self.sample({}, production=Constant).value
         return inputs
 
-    def sample_from_list(self, items):
-        return items[rng.choice(len(items))]
-
 
 def probabilities_for_weights(items, weights):
     probs = []
