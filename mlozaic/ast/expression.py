@@ -47,7 +47,7 @@ class Color(Atom):
         return Error()
 
     def evaluate(self, env):
-        return COLORS[self.tag]
+        return self.tag
 
     @property
     def tree(self):
