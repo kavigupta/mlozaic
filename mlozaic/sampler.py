@@ -123,7 +123,7 @@ class InputSampler:
         for o in outputs:
             within, not_within = 0, 0
             for item in o:
-                if item_within_bounding_box(item, self.input_size / 2):
+                if item_within_bounding_box(item, self.image_size / 2):
                     within += 1
                 else:
                     not_within += 1
