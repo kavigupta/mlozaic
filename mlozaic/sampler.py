@@ -96,7 +96,7 @@ class InputSampler:
             if io is not None:
                 return (program, *io)
 
-    def sample_inputs(self, program, variables):
+    def sample_inputs(self, program, variables, silent=True):
         tokens = set(program.code)
         if isinstance(program, Primitive):
             return
@@ -107,7 +107,8 @@ class InputSampler:
             return
         if not ("combine" in tokens or "repeat" in tokens):
             return
-        print("considering: ", " ".join(program.code))
+        if not silent:
+            print("considering: ", " ".join(program.code))
 
         inputs = [self.underlying.sample_inputs(variables) for _ in range(25)]
         try:
