@@ -85,9 +85,10 @@ def item_within_bounding_box(item, size):
 
 
 class InputSampler:
-    def __init__(self, underlying, size):
+    def __init__(self, underlying, *, image_size, num_inputs):
         self.underlying = underlying
-        self.size = size
+        self.image_size = image_size
+        self.num_inputs = num_inputs
 
     def sample(self, variables):
         while True:
@@ -110,7 +111,9 @@ class InputSampler:
         if not silent:
             print("considering: ", " ".join(program.code))
 
-        inputs = [self.underlying.sample_inputs(variables) for _ in range(25)]
+        inputs = [
+            self.underlying.sample_inputs(variables) for _ in range(self.num_inputs)
+        ]
         try:
             outputs = [program.evaluate(inp) for inp in inputs]
         except ZeroDivisionError:
@@ -120,7 +123,7 @@ class InputSampler:
         for o in outputs:
             within, not_within = 0, 0
             for item in o:
-                if item_within_bounding_box(item, self.size / 2):
+                if item_within_bounding_box(item, self.input_size / 2):
                     within += 1
                 else:
                     not_within += 1
