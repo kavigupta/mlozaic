@@ -10,7 +10,8 @@ def translate(cx, cy):
 
 
 def rotate(theta):
-    theta = theta * np.pi / 180
+    # in eigth-turns (pi/4)
+    theta = theta * np.pi / 4
     return np.array(
         [
             [np.cos(theta), -np.sin(theta), 0],
