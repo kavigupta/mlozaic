@@ -1,10 +1,10 @@
-from operator import add, sub, mul, floordiv, mod, lt, le, gt, ge, eq, and_, or_, not_
+from operator import add, sub, mul, truediv, mod, lt, le, gt, ge, eq, and_, or_, not_
 
 NUM_OPS = {
     "+": add,
     "-": sub,
     "*": mul,
-    "/": floordiv,
+    "/": truediv,
     "%": mod,
 }
 
