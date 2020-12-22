@@ -49,7 +49,7 @@ class TestParsing(unittest.TestCase):
     def test_rotated_square(self):
         self.render_or_check(
             "rotated-squares",
-            "(repeat $0 0 3 (rotate (/ (* $0 10) 45) (square black 0 0 30 30)))",
+            "(repeat $0 0 3 (rotate (/ $0 4) (square black 0 0 30 30)))",
         )
 
     def test_parabola(self):
