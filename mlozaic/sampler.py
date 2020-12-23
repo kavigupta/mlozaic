@@ -99,13 +99,13 @@ class InputSampler:
         self.image_size = image_size
         self.num_inputs = num_inputs
 
-    def sample(self, variables):
+    def sample(self, variables, silent=True):
         while True:
             try:
                 program = self.underlying.sample(variables)
             except DepthExceededError:
                 continue
-            io = self.sample_inputs(program, variables)
+            io = self.sample_inputs(program, variables, silent=silent)
             if io is not None:
                 return (program, *io)
 
