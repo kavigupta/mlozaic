@@ -2,10 +2,11 @@ from abc import ABC, abstractmethod
 
 import attr
 
+from ..constants import MAX_SHAPES
 from ..transforms import TRANSFORMS, translate, scale
 from ..leaves import LEAVES
 from ..value import Item
-from .node import Form, Error
+from .node import Form, Error, TooManyShapesError
 from .expression import Variable
 
 
@@ -112,6 +113,8 @@ class Repeat(SimpleForm):
             child_env = env.copy()
             child_env[var.name] = i
             shape += body.evaluate(child_env)
+            if len(shape) > MAX_SHAPES:
+                raise TooManyShapesError
         return shape
 
     @classmethod

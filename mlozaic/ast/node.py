@@ -55,3 +55,7 @@ class Error(Node):
     @property
     def tree(self):
         return "#err"
+
+
+class TooManyShapesError(Exception):
+    pass

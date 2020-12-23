@@ -4,6 +4,7 @@ import attr
 
 import numpy as np
 
+from .ast.node import TooManyShapesError
 from .ast.expression import Variable, Constant
 from .ast.drawing import Primitive
 from .grammar import grammar
@@ -129,6 +130,8 @@ class InputSampler:
         try:
             outputs = [program.evaluate(inp) for inp in inputs]
         except ZeroDivisionError:
+            return
+        except TooManyShapesError:
             return
 
         bad = 0
