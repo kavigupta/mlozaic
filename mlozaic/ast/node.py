@@ -14,7 +14,7 @@ class Node(ABC):
         pass
 
     @classmethod
-    def custom_sample(cls, sampler, variables):
+    def custom_sample(cls, sampler, variables, depth):
         pass
 
     @property

@@ -115,12 +115,13 @@ class Repeat(SimpleForm):
         return shape
 
     @classmethod
-    def custom_sample(cls, sampler, variables):
+    def custom_sample(cls, sampler, variables, depth):
         variable = Variable.fresh_variable(variables)
-        start, end = sampler.sample(variables, production="N"), sampler.sample(
-            variables, production="N"
+        start, end = (
+            sampler.sample(variables, production="N", depth=depth + 1),
+            sampler.sample(variables, production="N", depth=depth + 1),
         )
-        body = sampler.sample(variables | {variable}, production="D")
+        body = sampler.sample(variables | {variable}, production="D", depth=depth + 1)
         return cls.parse("repeat", (Variable.parse(variable), start, end, body))
 
 

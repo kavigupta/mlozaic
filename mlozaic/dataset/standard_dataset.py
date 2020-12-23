@@ -27,7 +27,9 @@ def sample_program(seed):
     num_inputs = rng.choice(10 * num_vars) + 2
     variables = {f"${i}" for i in range(num_vars)}
     sampler = InputSampler(
-        PCFGSampler(rng, weights=WEIGHTS), num_inputs=num_inputs, image_size=25
+        PCFGSampler(rng, weights=WEIGHTS, max_depth=7),
+        num_inputs=num_inputs,
+        image_size=25,
     )
     program, inputs, _ = sampler.sample(variables)
     return program, inputs

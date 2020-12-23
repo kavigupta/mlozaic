@@ -15,7 +15,7 @@ class Sampler(ABC):
         self.rng = rng
 
     @abstractmethod
-    def sample(self, variables, production="D"):
+    def sample(self, variables, production="D", depth=0):
         pass
 
     def sample_inputs(self, variables):
@@ -37,17 +37,20 @@ def probabilities_for_weights(items, weights):
 
 
 class PCFGSampler(Sampler):
-    def __init__(self, rng, grammar=grammar, weights={}):
+    def __init__(self, rng, grammar=grammar, weights={}, max_depth=float("inf")):
         super().__init__(rng)
         self.weights = weights
         self.grammar = grammar
+        self.max_depth = max_depth
 
     def sample_from_list(self, items):
         probs = probabilities_for_weights(items, self.weights)
         idx = self.rng.choice(len(probs), p=probs)
         return items[idx]
 
-    def sample(self, variables, production="D"):
+    def sample(self, variables, production="D", depth=0):
+        if depth > self.max_depth:
+            raise DepthExceededError
         variables = set(variables)
         if production == Variable:
             return Variable.parse(self.sample_from_list(sorted(variables)))
@@ -58,7 +61,9 @@ class PCFGSampler(Sampler):
         if isinstance(production, list):
             start, *rules = production
             tag = self.sample_from_list(start.tags())
-            return start.parse(tag, [self.sample(variables, rule) for rule in rules])
+            return start.parse(
+                tag, [self.sample(variables, rule, depth + 1) for rule in rules]
+            )
 
         assert isinstance(production, str)
         rule = self.sample_from_list(self.grammar[production])
@@ -66,10 +71,14 @@ class PCFGSampler(Sampler):
             start = rule[0]
         else:
             start = rule
-        custom_sample = start.custom_sample(self, variables)
+        custom_sample = start.custom_sample(self, variables, depth)
         if custom_sample is not None:
             return custom_sample
-        return self.sample(variables, rule)
+        return self.sample(variables, rule, depth)
+
+
+class DepthExceededError(Exception):
+    pass
 
 
 def item_within_bounding_box(item, size):
@@ -92,7 +101,10 @@ class InputSampler:
 
     def sample(self, variables):
         while True:
-            program = self.underlying.sample(variables)
+            try:
+                program = self.underlying.sample(variables)
+            except DepthExceededError:
+                continue
             io = self.sample_inputs(program, variables)
             if io is not None:
                 return (program, *io)
