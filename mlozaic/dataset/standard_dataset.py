@@ -1,4 +1,4 @@
-import shelve
+import pickle
 
 import numpy as np
 import tqdm as tqdm
@@ -7,6 +7,8 @@ import fire
 from ..sampler import PCFGSampler, InputSampler
 from ..ast.expression import Constant, Variable, Comparison
 from ..ast.drawing import Primitive, If, IfE
+
+from .indexed_dataset import IndexedDataset
 
 WEIGHTS = {
     Constant: 3,
@@ -22,7 +24,7 @@ WEIGHTS = {
 def sample_program(seed):
     rng = np.random.RandomState(seed)
     num_vars = rng.choice(3) + 1
-    num_inputs = rng.choice(10 * num_vars) + 1
+    num_inputs = rng.choice(10 * num_vars) + 2
     variables = {f"${i}" for i in range(num_vars)}
     sampler = InputSampler(
         PCFGSampler(rng, weights=WEIGHTS), num_inputs=num_inputs, image_size=25
@@ -32,11 +34,9 @@ def sample_program(seed):
 
 
 def generate_dataset(path, n, **kwargs):
-    with shelve.open(path, "c") as shelf:
-        for i in tqdm.trange(n):
-            if str(i) in shelf:
-                continue
-            shelf[str(i)] = sample_program(i)
+    with IndexedDataset(path) as shelf:
+        for i in tqdm.trange(len(shelf), n):
+            shelf.append(sample_program(i))
 
 
 def main():
