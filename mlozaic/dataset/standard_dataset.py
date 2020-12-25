@@ -1,4 +1,7 @@
+import os
+
 import pickle
+import shelve
 
 import numpy as np
 import tqdm as tqdm
@@ -7,8 +10,6 @@ import fire
 from ..sampler import PCFGSampler, InputSampler
 from ..ast.expression import Constant, Variable, Comparison
 from ..ast.drawing import Primitive, If, IfE
-
-from .indexed_dataset import IndexedDataset
 
 WEIGHTS = {
     Constant: 3,
@@ -36,9 +37,13 @@ def sample_program(seed):
 
 
 def generate_dataset(path, n, **kwargs):
-    with IndexedDataset(path) as shelf:
+    try:
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+    with shelve.open(path + "/data", "c") as shelf:
         for i in tqdm.trange(len(shelf), n):
-            shelf.append(sample_program(i))
+            shelf[str(i)] = sample_program(i)
 
 
 def main():
