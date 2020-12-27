@@ -42,8 +42,11 @@ def generate_dataset(path, n, **kwargs):
     except FileExistsError:
         pass
     with shelve.open(path + "/data", "c") as shelf:
-        for i in tqdm.trange(len(shelf), n):
-            shelf[str(i)] = sample_program(i)
+        for i in tqdm.trange(n):
+            try:
+                shelf[str(i)]
+            except KeyError:
+                shelf[str(i)] = sample_program(i)
 
 
 def main():
